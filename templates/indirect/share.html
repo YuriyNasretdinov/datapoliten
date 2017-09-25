@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Поделиться файлами</title>
+</head>
+<body>
+    <h2>С кем поделиться?</h2>
+				
+    <form action="/do-operation/" method="POST">
+    
+    <input type="hidden" name="action" value="do-share">
+    <?foreach($ids as $v){?>
+    <input type="hidden" name="ids[]" value="<?=$v?>">
+    <?}?>
+    
+    <input type="checkbox" onclick="window.location='/';" id="nobody"><label for="nobody">Ни с кем</label><br>
+    
+    <?foreach($users as $v){?>
+    
+        <input type="checkbox" name="user-ids[]" value="<?=$v['id']?>" id="user_<?=$v['id']?>"><label for="user_<?=$v['id']?>"><img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$v['other']['color']?>;"> <?=$v['name']?></label><br>
+    
+    <?}?>
+    
+    <br><b>Комментарий (необязательно):</b>
+    <br><textarea name="comment" cols="25" rows="5"></textarea>
+    
+    <br><br><input type="submit" value="поделиться"></form>
+</body>
+</html>

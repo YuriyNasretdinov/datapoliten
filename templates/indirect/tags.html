@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Метки для файлов</title>
+</head>
+<body>
+    <h2>Выберите метки для файлов:</h2>
+				
+    <form action="/do-operation/" method="POST">
+    
+    <input type="hidden" name="action" value="do-tag">
+    <?foreach($ids as $v){?>
+    <input type="hidden" name="ids[]" value="<?=$v?>">
+    <?}?>
+    
+    <?foreach($tagnames as $k=>$v){?>
+    
+        <input type="checkbox" name="tag-ids[]" value="<?=$k?>" id="tag_<?=$k?>" <?=(isset($tags[$k]) ? ' checked="checked"' : '')?> /><label for="tag_<?=$k?>"><?=$v?></label><br>
+    
+    <?}?>
+    
+    <br><input type="submit" value="пометить"></form>
+</body>
+</html>

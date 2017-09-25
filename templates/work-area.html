@@ -1,0 +1,342 @@
+<?
+
+if(!$USER->is_logined())
+{
+	header('location: /login.html');
+	die();
+}
+
+/*
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+*/
+
+function ibutton($id, $caption, $onclick = "")
+{
+	?>
+		<div class="button" id="btn_<?=$id?>" onmouseover="this.className='abutton';" onmouseout="this.className='button';" onclick="<?=$onclick?>; return false;"><table border="0" cellspacing="0" cellpadding="0">
+			<tbody>
+			<tr height="31" valign="top">
+				<td width="14" class="btn_l"></td>
+				<td><nobr id="btn_<?=$id?>_text" style="display: block; margin-top: 7px;"><?=$caption?></nobr></td>
+				<td width="14" class="btn_r"></td>
+			</tr>
+			</tbody>
+		</table></div>
+	<?
+
+}
+
+function hbutton($id, $caption, $onclick = "", $options = array())
+{
+	?>
+		<div class="hbutton" id="hbtn_<?=$id?>" onclick="$('hbtn_<?=$id?>').style.display = 'none'; $('hopt_<?=$id?>').style.display = 'none';  return false;"><table border="0" cellspacing="0" cellpadding="0">
+			<tbody>
+			<tr height="46" valign="top">
+				<td width="14" class="hbtn_l"></td>
+				<td><nobr style="display: block; margin-top: 7px;"><?=$caption?></nobr></td>
+				<td width="14" class="hbtn_r"></td>
+			</tr>
+			</tbody>
+		</table></div>
+		<div class="hmenu" id="hopt_<?=$id?>" onclick="$('hbtn_<?=$id?>').style.display = 'none'; $('hopt_<?=$id?>').style.display = 'none'; return false;">
+		
+			<? foreach($options as $k=>$v){?>
+			
+				<?if($k=='<hr />'){?>
+					<hr />
+				<?}else{?>
+					<div onclick="<?=$v?>" onmouseover="this.className='hovered';" onmouseout="this.className='';"><?=$k?></div>
+				<?}?>
+			
+			<?}?>
+		
+		</div>
+	<?
+}
+
+
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+    <title>Датаполитен | datapoliten.ru [вфефзщдшеутюкг]</title>
+	
+	<style type="text/css">
+	/* повторение некоторых важных начальных стилей */
+	
+	html {margin: 0; padding: 0; height: 100%; width: 100%; }
+	body {margin: 0; padding: 0; overflow: hidden; height: 100%; width: 100%; }
+	
+	*
+	{
+		font-family: "Trebuchet MS", sans-serif;
+		font-size: 14px;
+	}
+	
+	div,body,form,p,td
+	{
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	.loading_bg /* несовместимо с IE :(, поэтому background необходимо дублировать картинкой и толку от него немного */
+	{
+		background: url(data:image/gif;base64,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);
+	}
+	</style>
+</head>
+<body onload="If.load();" onresize="If.resize();" onkeydown="if(!If.is_inp(event) && !event.metaKey && !event.altKey && !event.ctrlKey) $('filter').focus();"><div style="position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; width: 100%; height: 100%;" id="initial_loading"><table width="100%" height="100%"><tr><td valign="middle" align="center"><img src="/pub/i/loading.gif" class="loading_bg" width="31" height="31"><br><br><b>Загрузка</b><br><br>Пожалуйста, подождите...</td></tr></table></div><script type="text/javascript" src="/pub/js/JsHttpRequest.js"></script><script type="text/javascript" src="/pub/js/main.js"></script><link rel="stylesheet" type="text/css" href="/pub/css/main.css" /><div id="very_main" style="width: 100%; height: 100%; padding: 0px; margin: 0px; visibility: hidden;">
+
+	<form action="/do-operation/" method="POST" id="operation_form" target="operation">
+		<input type="hidden" name="action" id="action">
+		<input type="hidden" name="newname" id="newname">
+		
+		<input type="hidden" name="ids[]" value="" id="ids__">
+	</form>
+	
+	<div class="ruler"></div>
+
+	<div id="info_invis"></div>
+
+	<div id="vstripe"></div>
+	
+	<div id="head_info"><table width="100%" height="100%" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="hi_name" valign="bottom"><?=$USER->name?></td>
+			<td class="hi_info" valign="bottom">У вас <span id="total"><? extract($SQL->res('SELECT COUNT(*) as `total` FROM `files` WHERE `uid`=?', $USER->id)); echo declension($total,'файл файла файлов'); ?></span></td>
+		</tr>
+	</table></div>
+	
+	<div id="head_stripe">
+		<img src="/pub/i/no.png" width="11" height="35" class="l" />
+		<img src="/pub/i/no.png" width="12" height="13" class="settings" onclick="If.wo('/profile.html', 'upload', 450, 350);" />
+		<img src="/pub/i/no.png" width="1" height="35" class="vline" style="left: 42px;" />
+		<img src="/pub/i/no.png" width="11" height="12" class="logout" onclick="if(confirm('Действительно выйти?')) window.location='/do-logout/';" />
+		<img src="/pub/i/no.png" width="1" height="35" class="vline" style="left: 82px;" />
+		
+		<!--
+		
+		поиска пока нет
+		
+		<img src="/pub/i/no.png" width="1" height="35" class="vline" style="right: 275px;" />
+		<input id="search" value="Поиск" class="inactive" onfocus="if(this.className == 'inactive') { this.defaultvalue = this.value; this.value=''; this.className = '';}" onblur="if(!this.value) { this.className='inactive'; this.value = this.defaultvalue; };" />
+		<img src="/pub/i/no.png" width="12" height="12" class="search" />
+		
+		-->
+	</div>
+	
+	<div id="tabs" class="unselectable">
+		<img src="/pub/i/no.png" width="88" height="95" id="t_files" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);" />
+		<img src="/pub/i/no.png" width="88" height="95" id="t_mail" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);" />
+		
+		<!-- 
+		<img src="/pub/i/no.png" width="88" height="95" id="t_downloads" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);" />
+		<img src="/pub/i/no.png" width="88" height="95" id="t_contacts" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);" />
+		-->
+		
+		<div id="tt_files" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);">Файлы</div>
+		<div id="tt_mail" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);">Почта</div>
+		<!--
+		<div id="tt_downloads" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);">Загрузки</div>
+		<div id="tt_contacts" onmouseover="Tab.mover(this);" onmouseout="Tab.mout(this);" onclick="Tab.click(this);">Контакты</div>
+		-->
+	</div>
+	
+	<div id="work_area">
+		<!-- <img src="/pub/i/m/files.png" /> -->
+		<div class="name">Файлы</div>
+		
+		<?
+			ibutton('all','Все &darr;', "$('hbtn_all').style.display = 'block'; $('hopt_all').style.display = 'block';");
+			hbutton('all','Все &darr;');
+		
+			ibutton('selected', 'С выделенными &darr;', "$('hbtn_selected').style.display = 'block'; $('hopt_selected').style.display = 'block';");
+			hbutton('selected', 'С выделенными &uarr;', "",
+			array(
+			//'Редактировать'=> '',
+			'Переименовать'=> 'Fi.rename();',
+			'Дублировать'=> 'Fi.duplicate();',
+			'Удалить'=>'Fi.remove();',
+			'<hr />'=>'',
+			'Настроить тэги'=> "If.wo('about:blank', 'operation', 450, 350); $('action').value='tag'; $('ids__').value = Fi.get_sfile()['id']; $('operation_form').submit();",
+			'Комментировать'=> 'Fi.comment();',
+			'<b>Поделиться</b>'=> "If.wo('about:blank', 'operation', 450, 350); $('action').value='share'; $('ids__').value = Fi.get_sfile()['id']; $('operation_form').submit();"
+			));
+			
+			ibutton('upload', 'Загрузить файлы', "If.wo('/upload.html', 'upload', 450, 350);");
+			
+			ibutton('old_iface','Старый интерфейс', "window.location='/';");
+		?>
+	
+		
+		
+		<div id="work_work">
+			<div class="panel">
+				<img src="/pub/i/no.png" width="11" height="46" class="l" />
+				<img src="/pub/i/no.png" width="11" height="46" class="r" />
+				
+				<table class="cols" cellpadding="0" cellspacing="0">
+				<tr height="25" valign="middle" align="center">
+					<td width="43">Тип</td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td><a href="#" id="sort_name" onclick="return Fi.chsort(this);" class="sort__">Имя<span class="d"> &darr;</span><span class="u"> &uarr;</span></a></td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td width="58"><a href="#" id="sort_date" onclick="return Fi.chsort(this);" class="sort_d">Дата<span class="d"> &darr;</span><span class="u"> &uarr;</span></a></td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td width="68"><a href="#" id="sort_size" onclick="return Fi.chsort(this);" class="sort__">Размер<span class="d"> &darr;</span><span class="u"> &uarr;</span></a></td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td width="88"><a href="#" id="sort_oid" onclick="return Fi.chsort(this);" class="sort__">Владелец<span class="d"> &darr;</span><span class="u"> &uarr;</span></a></td>
+				</tr>
+				</table>
+				
+				<input id="filter" value="фильтр неактивен" class="inactive" onkeyup="if(window.__ftimeout) clearTimeout(__ftimeout); window.__ftimeout = setTimeout(function(){Fi.reload();}, event.keyCode == 13 ? 0 : 50);" onfocus="if(this.className == 'inactive') { this.defaultvalue = this.value; this.value=''; this.className = '';}" onblur="if(!this.value) { this.className='inactive'; this.value = this.defaultvalue; };" />
+				
+				<img src="/pub/i/no.png" width="12" height="10" class="pan_filt" />
+			</div>
+			
+			<div id="files" onscroll="window.__lscrolled = true; if(!window.__linterval) window.__linterval = setInterval(function(){ if(!window.scrolled) { clearInterval(window.__linterval); window.__linterval = null; }; window.__lscrolled = false; Fi.load();}, 100);" class="unselectable">
+				<div style="height: 10px; width: 10px; position: absolute; top: 0px; left: 0px;" id="files_scroller">&nbsp;</div>
+			</div>
+			
+			<div class="statusbar">
+				<img src="/pub/i/no.png" width="11" height="25" class="l">
+				<img src="/pub/i/no.png" width="11" height="25" class="r">
+			</div>
+		</div>
+		
+	</div>
+	
+	<div id="mail" style="display: none;">
+		<!-- <img src="/pub/i/m/files.png" /> -->
+		<div class="name" id="mail_name">Входящие</div>
+		
+		<?
+			ibutton('outbox', 'Исходящие', "if($('btn_outbox_text').innerHTML == 'Исходящие') Ma.load('out'); else Ma.load('in');");
+			ibutton('new_message', '<b>Написать</b>', "If.wo('/new-message/', 'upload', 450, 350);");
+		?>
+		
+		<div id="mail_work">
+			<div class="panel">
+				<img src="/pub/i/no.png" width="11" height="46" class="l" />
+				<img src="/pub/i/no.png" width="11" height="46" class="r" />
+				
+				<table class="cols" cellpadding="0" cellspacing="0">
+				<tr height="25" valign="middle" align="center">
+					<td width="165">Отправитель</td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td>Текст</a></td>
+					<td width="1"><img src="/pub/i/no.png" width="1" height="25" class="pan_sep"></td>
+					<td width="100">Дата</td>
+				</tr>
+				</table>
+			</div>
+			
+			<div id="messages">
+				<!--
+				<div style="height: 10px; width: 10px; position: absolute; top: 0px; left: 0px;" id="mail_scroller">&nbsp;</div>
+				-->
+			</div>
+			
+			<div class="statusbar">
+				<img src="/pub/i/no.png" width="11" height="25" class="l">
+				<img src="/pub/i/no.png" width="11" height="25" class="r">
+			</div>
+		</div>
+		
+	</div>
+	
+	<div id="tags">
+		<div class="name">Тэги</div>
+		
+		<? ibutton('tadd', '+', 'Fi.add_tag();'); ?>
+		
+		<div id="tags_wrap">
+			<img src="/pub/i/no.png" width="199" height="14" class="tags_top" />
+			
+			<div id="tags_tags">
+				<?
+				print_tags();
+				?>
+			</div>
+			
+			<img src="/pub/i/no.png" width="199" height="11" class="tags_btm" id="tags_btm" />
+		</div>
+		
+	</div>
+	
+	<div id="info">
+		<div class="name">Инфо</div>
+		
+		<div id="info_wrap">
+			<img src="/pub/i/no.png" width="199" height="14" class="info_top" />
+			
+			<div id="info_info">
+				
+			</div>
+			
+			<img src="/pub/i/no.png" width="199" height="11" class="info_btm" id="info_btm" />
+		</div>
+		
+	</div>
+	
+<!-- mp3 player -->
+
+<div style="position: absolute; top: 0px; left: 0px; display: none; z-index: -1;" id="mp3_player_div">
+	<object class="playerpreview" id="myFlash" type="application/x-shockwave-flash" data="/pub/mix/swfplayer/player_mp3_js.swf" width="0" height="0">
+		<param name="movie" value="/pub/mix/swfplayer/player_mp3_js.swf" />
+		<param name="AllowScriptAccess" value="always" />
+		<param name="FlashVars" value="listener=mp3&amp;interval=500" />
+	</object>
+
+	<script type="text/javascript">
+	var player = document.getElementById("myFlash");
+	var mp3 = {};
+	mp3.onInit = mp3.onUpdate = function() { };
+	
+	function play_mp3(url)
+	{
+		player.SetVariable("method:setUrl", url);
+		player.SetVariable("method:play", "");
+	}
+	function stop_mp3()
+	{
+		player.SetVariable("method:stop", "");
+	}
+	
+	function toggle_play(url, obj)
+	{
+		if(!this.lastobj) this.lastobj = null;
+		
+		if(!this.lastobj || this.lastobj != obj)
+		{
+			if(this.lastobj)
+			{
+				this.lastobj.style.backgroundPosition = '';
+				stop_mp3();
+			}
+			play_mp3(url);
+			
+			this.lastobj = obj;
+			obj.style.backgroundPosition = '-16px -0px';
+		}else
+		{
+			this.lastobj.style.backgroundPosition = '';
+			stop_mp3();
+			this.lastobj = null;
+		}
+	}
+	</script>
+
+	<!--[if IE]>
+	<script type="text/javascript" event="FSCommand(command,args)" for="myFlash">
+	eval(args);
+	</script>
+	<![endif]-->
+	
+</div>
+
+<!-- /mp3 player -->
+
+</div></body>
+</html>

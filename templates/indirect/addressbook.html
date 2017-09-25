@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+    <title>Адресная книга</title>
+</head>
+<body>
+    <h1>Адресная книга</h1>
+    
+    <?foreach($friends as $v){?>
+       <a href="/do-delete-friend/<?=$v?>/" style="color: black; text-decoration: underline; font-weight: bold;" onclick="return confirm('Точно удалить человека из контактов?');">X</a>
+       <img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$users[$v]['other']['color']?>;">
+       <?=$users[$v]['name']?>
+       <br>
+    <?}?>
+    
+    <hr style="margin: 15px 0px 15px 0px;" />
+    
+    <a href="#" onclick="var el = document.getElementById('add_form'); if(el.style.display == 'none') el.style.display = ''; else el.style.display = 'none'; return false;">добавить человека</a>
+    
+    <form action="/do-add-friend/" method="POST" style="display: none; margin-top: 5px;" id="add_form">
+    
+    <?foreach($users as $v){if(isset($friends[$v['id']]))continue;?>
+    
+        <input type="checkbox" name="user-ids[]" value="<?=$v['id']?>" id="user_<?=$v['id']?>"><label for="user_<?=$v['id']?>"><img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$v['other']['color']?>;"> <?=$v['name']?></label><br>
+    
+    <?}?>
+    
+    <br><br><input type="submit" value="добавить">
+    </form>
+    
+</body>
+</html>

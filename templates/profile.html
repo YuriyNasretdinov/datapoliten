@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Редактировать профиль</title>
+    
+    <style>
+    input { width: 200px; }
+    </style>
+
+    <script>
+    window_open = function(src, name, width, height)
+	  {	
+		 return window.open(src, name, 'width=' + width + ',height= ' + height + ',resizeable=0,menubar=0,location=0,scrollbars=1,toolbar=0,status=0,top='+(screen.height/2-height/2)+',left='+(screen.width/2-width/2));
+	  }
+    </script>
+</head>
+<body>
+    <h2>Ваш профиль:</h2>
+
+<fieldset>
+        <legend>Поля, помеченные звездочкой (*), обязательны</legend>
+
+    <form action="/do-edit-profile/" method="POST">
+    
+    <table cellspacing=4>
+        
+        <tr>
+            <td>ФИО *:<br><small>Введите свою фамилию, имя и отчество через пробел.</small></td>
+            <td><input type="text" name="name" value="<?=$USER->name?>"></td>
+        </tr>
+        
+        <tr>
+            <td>E-mail:<br><small>Используется для входа в систему, а также для восстановления пароля.</small></td>
+            <td><input type="text" name="email" value="<?=$USER->email?>" disabled="disabled"></td>
+        </tr>
+        
+        <tr>
+            <td>Пароль:<br><small>Для смены пароля, введите в первое поле свой старый пароль, а в два следующих &mdash; новый.</small></td>
+            <td>
+                <input type="password" name="old-password">
+                <hr style="padding: 0px; margin: 3px 0px 3px 0px;">
+                <input type="password" name="password" style="margin-bottom: 3px;">
+                <br>
+                <input type="password" name="password2">
+            </td>
+        </tr>
+        
+        <tr>
+            <td>Цвет:<br><small><a href="/pub/js/colorpicker/" target="_blank" onclick="window_open(this.href, 'picker', 440, 300); return false;">выбрать цвет</a></small></td>
+            <td><input type="text" name="color" value="#<?=$USER->other['color']?>" id="color" onkeyup="this.style.backgroundColor = this.value;" style="background: #<?=$USER->other['color']?>;"></td>
+        </tr>
+        
+    </table>
+            
+</fieldset>
+
+    <div align="center" style="padding: 0px; margin: 5px 0px 0px 0px;">
+        <button type="submit"><b>подтвердить изменения</b></button>
+    </div>
+    
+    </form>
+</body>
+</html>

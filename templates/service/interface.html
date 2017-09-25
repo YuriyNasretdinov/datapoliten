@@ -1,0 +1,336 @@
+<div class="menu">
+	
+	<div><a href="/work-area.html">Новый интерфейс</a></div>
+	
+	<div><a href="upload.html" target="_blank" onclick="window_open(this.href, 'upload', 450, 350); return false;">Закачать файлы</a></div>
+	
+	<div><a href="/new-message/">Написать письмо</a></div>
+	
+	<div><a href="profile.html" target="_blank" onclick="window_open(this.href, 'upload', 450, 350); return false;">Редактировать профиль</a></div>
+
+	<div><a href="/addressbook/" target="_blank" onclick="window_open(this.href, 'addressbook', 450, 350); return false;">Адресная книга</a></div>
+	
+	<form class="search">
+		<input type="text" name="query">
+		<button type="button">Поиск</button>
+	</form>
+	
+</div>
+
+<table width="100%">
+
+<tr>
+	
+	<td class="left" width="250">
+	
+	<div class="block">
+		<div class="header">Файлы</div>
+		<div class="content">
+			
+			<?
+			$folders = array(
+			'all'       => '<b>Все</b>',
+			'no-tags'   => 'Без меток',
+			'with-tags' => 'С метками',
+			'foreign'   => 'Чужие',
+			'my'        => 'Свои'
+			);
+			
+			foreach($folders as $cat => $name)
+			{
+				?><div class="dir"><a href="/?files=<?=$cat?>"><?=$name?></a></div><?
+			}
+			?>
+			
+		</div>
+	</div>
+	
+	<div class="block">
+		<div class="header">Сообщения</div>
+		<div class="content">
+			
+			<div class="dir"><a href="/?msg=in"><? if($MSG->get_new() > 0) { ?><b>Входящие (<?=$MSG->get_new()?>)</b><? } else {?>Входящие<? } ?></a></div>
+			<div class="dir"><a href="/?msg=out">Отправленные</a></div>
+			
+		</div>
+	</div>
+	
+	<?if(!isset($_GET['msg'])){?>
+	
+	<div class="block">
+		<div class="header">Действия с файлами</div>
+		<div class="content">
+			
+			<div class="dir"><b>Редактировать</b></div>
+			<div class="dir"><a href="#" onclick="$('action').value='rename'; var nam = prompt('Введите новое имя файла',''); if(!nam) return false; $('newname').value = nam; $('operation_form').submit(); return false;">Переименовать</a></div>
+			<div class="dir"><a href="#" onclick="$('action').value='duplicate'; $('operation_form').submit(); return false;">Дублировать</a></div>
+			<div class="dir"><a href="#" onclick="if(!confirm('Файлы будут удалены навсегда, продолжить?\nВ случае, если файлы были разделены с другими пользователями, то они перестанут быть доступны.')) return false; $('action').value='delete'; $('operation_form').submit(); return false;">Удалить</a></div>
+			<hr>
+			<div class="dir"><a href="#" onclick="$('action').value='tag'; $('operation_form').submit(); return false;">Пометить / Снять метку</a></div>
+			<div class="dir"><a href="#" onclick="$('action').value='comment';  var comm = prompt('Введите комментарий',''); if(comm === null) return false; $('newname').value = comm; $('operation_form').submit(); return false;">Комментировать</a></div>
+			<div class="dir"><a href="#" onclick="$('action').value='share'; $('operation_form').submit(); return false;"><b>Поделиться</b></a></div>
+			
+		</div>
+	</div>
+	
+	<div class="block">
+		<div class="header">Метки</div>
+		<div class="content">
+			
+			<form action="/do-delete-tag/" method="POST" id="delete_tag_form">
+			<input type="hidden" name="id" value="" id="tag_id" />
+			<?foreach($tags as $k=>$v){?>
+			<div class="dir"><a href="/?tag=<?=$k?>" class="tag"><?=$v?></a>&nbsp;&nbsp;<a href="#" onclick="if(!confirm('Действительно удалить метку?')) return false; $('tag_id').value=<?=$k?>; $('delete_tag_form').submit(); return false;" style="color: black;">X</a></div>
+			<?}?>
+			<input type="submit" style="display: none;">
+			</form>
+			<hr>
+			<form action="/do-add-tag/" method="POST" id="add_tag_form">
+			<input type="hidden" name="name" value="" id="tag_name" />
+			<div class="dir"><a href="#" onclick="var nam = prompt('Введите имя метки',''); if(!nam) return false; $('tag_name').value = nam; $('add_tag_form').submit(); return false;"><b>Новая метка</b></a></div>
+			<input type="submit" style="display: none;">
+			</form>
+			
+		</div>
+	</div>
+	
+	<?}?>
+		
+	</td>
+	
+	<td class="files">
+
+	<? if(isset($_GET['msg']))
+	{
+		?>
+
+		<div class="title">
+			Сообщения (<?=($msg_folder == 'in' ? 'Входящие' : 'Отправленные')?>)
+		</div>
+
+			<?
+			foreach($messages as $v)
+			{
+			?>
+			
+			<div class="message">
+				<div class="date"><?=date('d.m.Y H:i:s', $v['date'])?></div>
+				<?
+				foreach(explode(',',$v[$muser_field]) as $uid)
+				{
+					$u = $users[$uid];
+					if(!is_array($u)) $u = array('other'=>array('color'=>'000000'),'name'=>'удаленный пользователь','short name'=>'<i>пользователь удален</i>'); ?>
+					<div class="author"><img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$u['other']['color']?>;"> <abbr title="<?=$u['name']?>"><?=$u['short name']?></abbr></div>
+				<?
+				}
+				?>
+				<div class="text">
+					<?=$v['text']?>
+					<? if($msg_folder == 'in') { ?>
+						<br>(<a href="/new-message/?answer=<?=$v[$muser_field]?>">ответить</a> | <a href="/do-delete-message/<?=$v['id']?>/" onclick="return confirm('Вы действительно хотите удалить это сообщение?');">удалить</a>)
+					<? } ?>
+				</div>
+			</div>
+			
+			<?
+			}
+			
+	}else
+	{
+	?>
+	<div class="title">
+		Файлы
+		(<?=$folders[$files_folder]?>)
+	</div>
+	
+	<?function show_pages($page, $total_pages){ if(!$total_pages) return; ?>
+	
+	<div class="pages">
+		Страницы:
+		
+		<?for($i = 1; $i <= $total_pages; $i++){
+		
+		if($i == $page) echo '<b>'.$i.'</b> ';
+		else echo '<a href="/?page='.$i.(isset($_GET['files']) ? '&files='.urlencode($_GET['files']) : '').(isset($_GET['tag']) ? '&tag='.intval($_GET['tag']) : '').'">'.$i.'</a> ';
+		
+		}?>
+	</div>
+	<?}?>
+	
+	<? if(isset($page)) show_pages($page, $total_pages); ?>
+
+	<form action="/do-operation/" method="POST" id="operation_form">
+		
+		<input type="hidden" name="action" id="action">
+		<input type="hidden" name="newname" id="newname">
+
+		<table border="1" width="100%" cellspacing="0" cellpadding="0">
+		
+		<thead>
+			<tr>
+				<th width="16">&nbsp;</th>
+				<th>Имя</th>
+				<th width="80">Размер</th>
+				<th width="100">Дата</th>
+				<th width="100" colspan=2>Владелец</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			
+			<?
+			foreach($list as $v)
+			{
+			$u = $users[$v['oid']];
+			
+			?>
+			
+			<tr>
+				<td width="16"><input type="checkbox" name="ids[]" value="<?=$v['id']?>"></td>
+				<td class="file">
+					<script>document.write(file_icon('<?=addslashes($v['name'])?>', '<?=(isset($shared_with[$v['id']]) ? 'share' : 'no')?>'));</script>
+					<?
+					$add = '';
+					
+					$ext = end(explode('.',$v['name']));
+					
+					$link = $USER->pub_directory.'/'.rawurlencode($v['name']);
+					
+					$convertable = $CONVERTABLE;
+					
+					if($ext == 'mp3')
+					{
+						echo '<a href="#" onclick="toggle_play(\''.$USER->pub_directory.'/'.rawurlencode($v['name']).'\', this.firstChild); return false;"><img src="/pub/i/no.png" style="background-image: url(/pub/mix/swfplayer/player.png);" width="16" height="16" border="0" /></a>';
+						$embed_mp3 = true;
+					}else if(in_array($ext,$convertable))
+					{
+						$add = ' <small>(<a href="'.$link.'" title="Скачать исходный файл">скачать</a>)</small>';
+						$link = '/convert/'.rawurlencode($v['name']).'" target="_blank';
+					}
+					
+					?>
+					<a href="<?=$link?>" class="file"><?=htmlspecialchars($v['name'])?></a><?=$add?>
+					
+					<?foreach($v['tags'] as $tag) { if(empty($tags[$tag])) continue; ?>
+						<span class="tag"><a href="/?tag=<?=$tag?>"><nobr><?=$tags[$tag]?></nobr></a></span>
+					<?}?>
+					
+					<?if($v['comment']){?><span class="comment"> &mdash; <?=$v['comment']?></span><?}?>
+					
+					<?if(isset($shared_with[$v['id']])){?>
+						<div class="shared_with">
+						<? foreach($shared_with[$v['id']] as $uid){ $u2 = $users[$uid];?>
+						
+						<div class="author"><img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$u2['other']['color']?>;"> <abbr title="<?=$u2['name']?>"><?=$u2['short name']?></abbr></div>
+						
+						<?}?>
+						</div>
+					<?}?>
+				</td>
+				<td><?=show_size(0,1,$v['size'])?></td>
+				<td width="100"><?=date('d.m.Y', $v['date'])?></td>
+				<td width="74"><abbr title="<?=$u['name']?>"><?=($v['uid'] == $v['oid'] ? 'Вы' : $u['short name'])?></abbr></td>
+				<td width="16" style="height: 16px; background: #<?=$u['other']['color']?>;"></td>
+			</tr>
+			
+			<?
+			}
+			?>
+		
+		</tbody>
+		
+		</table>
+	
+	<input type="submit" style="display: none;">
+</form>
+	
+	<? if(isset($page)) show_pages($page, $total_pages); ?>
+
+	<? } ?>
+
+	</td>
+
+</tr>
+
+</table>
+
+<? if(isset($embed_mp3)) { ?>
+
+<!-- mp3 player -->
+
+<div style="position: absolute; top: 0px; left: 0px; display: none; z-index: -1;" id="mp3_player_div">
+	<object class="playerpreview" id="myFlash" type="application/x-shockwave-flash" data="/pub/mix/swfplayer/player_mp3_js.swf" width="0" height="0">
+		<param name="movie" value="/pub/mix/swfplayer/player_mp3_js.swf" />
+		<param name="AllowScriptAccess" value="always" />
+		<param name="FlashVars" value="listener=mp3&amp;interval=500" />
+	</object>
+
+	<script type="text/javascript">
+	var player = document.getElementById("myFlash");
+	var mp3 = {};
+	mp3.onInit = mp3.onUpdate = function() { };
+	
+	function play_mp3(url)
+	{
+		player.SetVariable("method:setUrl", url);
+		player.SetVariable("method:play", "");
+	}
+	function stop_mp3()
+	{
+		player.SetVariable("method:stop", "");
+	}
+	
+	function toggle_play(url, obj)
+	{
+		if(!this.lastobj) this.lastobj = null;
+		
+		if(!this.lastobj || this.lastobj != obj)
+		{
+			if(this.lastobj)
+			{
+				this.lastobj.style.backgroundPosition = '';
+				stop_mp3();
+			}
+			play_mp3(url);
+			
+			this.lastobj = obj;
+			obj.style.backgroundPosition = '-16px -0px';
+		}else
+		{
+			this.lastobj.style.backgroundPosition = '';
+			stop_mp3();
+			this.lastobj = null;
+		}
+	}
+	</script>
+
+	<!--[if IE]>
+	<script type="text/javascript" event="FSCommand(command,args)" for="myFlash">
+	eval(args);
+	</script>
+	<![endif]-->
+	
+</div>
+
+<!-- /mp3 player -->
+
+<? } ?>
+
+<div class="copyright">
+	&copy; Датаполитен 2008<?=(date('Y')!=2008 ? '-'.date('Y') : '')?><br>
+	<!-- <a href="mailto:support@<?=$_SERVER['HTTP_HOST']?>">support@<?=$_SERVER['HTTP_HOST']?></a> --><a href="/new-message/?answer=1,2,6">Оставить отзыв / Сообщить об ошибке</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://datapoliten.blogspot.com">Блог разработчиков</a><br><br>
+	<small>
+		
+		<b>MySQL:</b> <?=declension($GLOBALS['QUERIES'], 'запрос запроса запросов')?> за <?=round($GLOBALS['SQLTIME'], 4)?>сек;
+		<b>Всего:</b> <!--следующий тег будет автоматически заменен на конечное время--><total_time/>сек
+		
+		<!--
+		
+		<?
+		print_r($SQLSTATS);
+		?>
+		
+		-->
+
+</small>
+</div>

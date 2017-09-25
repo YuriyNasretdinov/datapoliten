@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+
+<head>
+   <title> Датаполитен | datapoliten.ru [вфефзщдшеутюкг]</title>
+   
+   <link rel="shortcut icon" href="/favicon.ico">
+   
+   <meta name="generator" content="Hands and Notebook of Yuriy Nasretdinov" />
+   
+   <link rel="stylesheet" type="text/css" href="/pub/css/interface.css">
+   <script type="text/javascript">
+      function $(id)
+      {
+         return document.getElementById(id);
+      }
+      
+      var _ext = {_default: 0, ace: 1, app: 2, avi: 3, bat: 4, bmp: 5, chm: 6, com: 7, css: 8, divx: 9, dll: 10, doc: 11, exe: 12, fon: 13, gif: 14, gz: 15, hlp: 16, htaccess: 17, htm: 18, html: 19, htpasswd: 20, inc: 21, ini: 22, jpe: 23, jpeg: 24, jpg: 25, js: 26, lnk: 27, log: 28, mdb: 29, mid: 30, midi: 31, mov: 32, mp3: 33, mpeg: 34, mpg: 35, pdf: 36, php: 37, php3: 38, phtml: 39, pl: 40, png: 41, psd: 42, ptt: 43, rar: 44, rtf: 45, shtm: 46, shtml: 47, sys: 48, tar: 49, ttf: 50, txt: 51, wav: 52, wbmp: 53, wma: 54, zip: 55};
+	
+      file_icon = function(path, name)
+      {
+		  name = name || 'no';
+          var e = get_extension(path).toLowerCase();
+          
+          return '<img src="/pub/i/'+name+'.png" width=16 height=16 border=0 style="background: url(\'/pub/i/16-f.png\'); background-position: 0px '+(_ext[e] ? -_ext[e]*16 : 0)+'px">';
+      };
+      
+      get_extension = function(file)
+      {
+          var arr=file.split('.');
+          if(arr.length == 1) return '';
+          return arr[arr.length-1];
+      }
+	  
+	  window_open = function(src, name, width, height)
+	  {	
+		 return window.open(src, name, 'width=' + width + ',height= ' + height + ',resizeable=0,menubar=0,location=0,scrollbars=1,toolbar=0,status=0,top='+(screen.height/2-height/2)+',left='+(screen.width/2-width/2));
+	  }
+	  
+	  as_init = function()
+	  {
+		 /* prevent screen flicker in Firefox */
+		 
+		 var el = document.getElementById('mp3_player_div');
+		 
+		 if(el) el.style.display = 'block';
+		 
+		 return true;
+	  }
+   </script>
+	
+</head>
+
+<body onload="if(window.as_init) as_init();">
+
+<noscript>
+   
+   <style>
+   body { overflow: hidden; margin: 0px; padding: 0px; }
+   </style>
+   
+   <div style="width: 100%; height: 100%; text-align: center;">
+      <h1>Сожалеем, но наш сервис пока не имеет версии для КПК, мобильных устройств, текстовых браузеров, и прочих, в которых нет JavaScript.
+         <br><br>
+         Пожалуйста, включите JavaScript, или же воспользуйтесь браузером, который имеет такую поддержку.
+      <br><br>В качестве одного из таких браузеров, советуем попробовать использовать популярный браузер <a href="http://getfirefox.com/">Mozilla Firefox</a>, или любой другой, имеющий поддержку JavaScript, cookies и AJAX
+      </h1>
+   </div>
+   
+</noscript>
+
+<div class="login">
+
+      Добро пожаловать, <?=$USER->name?>!
+      
+      &nbsp;&nbsp;/&nbsp;&nbsp;
+      
+      Использовано <?=show_size(0,1,$USER->used)?> из <?=show_size(0,1,$USER->quota)?>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      
+      <a href="/do-logout/">Выйти</a>
+</div>
+
+<?
+   include('interface.html');
+?>
+
+
+
+</body>
+</html>

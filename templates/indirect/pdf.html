@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+		<title>Предпросмотр PDF</title>
+	</head>
+	
+	<style>
+	*{ margin: 0px; padding: 0px; }
+	</style>
+<body>
+	
+<table width="100%" height="100%" cellspacing="0" cellpadding="0">
+	<tr>
+		<td align="center"><object width="100%" height="100%" id="presentation_swf"><param name="movie" value="-.swf"><param name="quality" value="best"><embed src="-.swf" width="100%" height="100%" swliveconnect="true" name="presentation_swf" quality="best"></embed></object></td>
+	</tr>
+		
+	<tr height="60" style="background: #dddddd;">
+		<td align="center">
+			<small>(<a href="#" onclick="fobj.Zoom(150); return false;">уменьшить</a> | <a href="#" onclick="fobj.Zoom(0); return false;">исходный размер</a> | <a href="#" onclick="fobj.Zoom(75); return false;">увеличить</a>)<br><br></small>
+			<a href="#" onclick="fback(); return false;">назад</a>
+			
+			|
+			
+			<span id="frames">(<b><span id="framenum">1</span>/<span id="totalframes">1</span></b>)</span>
+			
+			<span id="loading" title="вы можете перемещаться по презентации, пока идет загрузка, но некоторые страницы могут отображаться некорректно"> | <i>загрузка... <span id="percent">0</span>%</i></span>
+			
+			|
+			
+			<a href="#" onclick="fnext(); return false;">вперед</a></td>
+	</tr>
+		
+</table>
+
+<script>
+function $(id)
+{
+	return document.getElementById(id);
+}
+
+function gobj(n)
+{
+  if (window.document[n]) return window.document[n];
+  if (document.all && !window.opera && document.embeds && document.embeds[n]) return document.embeds[n];
+  else return $(n);
+}
+
+var fobj = gobj("presentation_swf");
+
+var totframes = 0;
+
+var frame_interval = 1;
+var first_frame = 1;
+
+var totframes_int = setInterval(function(){
+	
+	totframes = fobj.TotalFrames();
+	if(totframes && totframes > 0)
+	{
+		clearInterval(totframes_int);
+		$('totalframes').innerHTML = totframes;
+	}
+	
+},50);
+
+var loaded = false;
+
+var framenum_update = setInterval(function(){
+	$('framenum').innerHTML = print_frame(curframe());
+	if(loaded) return;
+	var percent = fobj.PercentLoaded();
+	if(percent == 100 && !loaded)
+	{
+		loaded = true;
+		$('loading').style.display = 'none';
+	}else if(!loaded)
+	{
+		$('percent').innerHTML = percent;
+	}
+}, 200);
+
+function curframe()
+{
+	return fobj.TGetProperty("/", 4);
+}
+
+function print_frame(fr)
+{
+	return fr || '1';
+}
+
+function fnext()
+{
+	if(parseInt($('framenum').innerHTML) == parseInt($('totalframes').innerHTML)) return;
+	
+	// 4 is the index of the property for _currentFrame
+	var currentFrame=curframe();
+	var nextFrame=parseInt(currentFrame) + frame_interval - 1;
+
+	if(nextFrame >= totframes) return;
+
+	fobj.GotoFrame(nextFrame);
+	fobj.Zoom(0);
+	
+	$('framenum').innerHTML = print_frame(nextFrame+1);
+}
+
+function fback()
+{
+	if(parseInt($('framenum').innerHTML) == 1) return;
+	
+	// 4 is the index of the property for _currentFrame
+	var currentFrame=curframe();
+	
+	var prFrame=parseInt(currentFrame) - frame_interval - 1;
+	if (prFrame < 0) prFrame = 0;
+	fobj.Rewind();
+	fobj.GotoFrame(prFrame);
+	fobj.Zoom(0);
+	
+	$('framenum').innerHTML = print_frame(prFrame+1);
+}
+</script>
+
+</body></html>

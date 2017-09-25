@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Написать сообщение</title>
+</head>
+<body>
+    <h2>Кому написать?</h2>
+				
+    <form action="/do-new-message/" method="POST">
+    
+    <input type="checkbox" onclick="window.location='/';" id="nobody"><label for="nobody">Никому</label><br>
+    
+    <?foreach($users as $v){?>
+    
+        <input type="checkbox" name="ids[]" value="<?=$v['id']?>" id="user_<?=$v['id']?>" <?=(isset($_GET['answer']) && in_array($v['id'], explode(',',$_GET['answer'])) ? 'checked="checked"' : '')?>><label for="user_<?=$v['id']?>"><img src="/pub/i/no.png" width="12" height="12" style="background: #<?=$v['other']['color']?>;"> <?=$v['name']?></label><br>
+    
+    <?}?>
+    
+    <br><b>Сообщение:</b>
+    <br><textarea name="text" cols="25" rows="5"></textarea>
+    
+    <br><br><input type="submit" value="написать"></form>
+</body>
+</html>

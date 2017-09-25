@@ -1,0 +1,64 @@
+<? if($USER->is_logined()) { header('location: /'); die(); }?>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+	<title>Датаполитен (вход в систему) | datapoliten.ru [вфефзщдшеутюкг]</title>
+	<link rel="stylesheet" type="text/css" href="/pub/css/login.css">
+</head>
+<body onload="document.getElementById('email').focus();">
+	<!-- <div class="ruler"></div> -->
+	
+    <form action="/do-login/" method="POST">
+        <table width="510" height="190" cellspacing="5" cellpadding="5">
+			<tr>
+				<td>
+				</td>
+				<td width="290" class="header">
+					Открыть точку данных:
+				</td>
+				<td width="40">
+				</td>
+			</tr>
+			
+            <tr height="30">
+                <td class="comment">Электронная почта</td>
+                <td width="290"><input type="text" name="email" value="<?=htmlspecialchars($USER->email)?>" tabindex="1" id="email"></td>
+				
+				<td rowspan="2">
+					<input type="image" src="/pub/i/login/enter.png" class="img" tabindex="3">
+				</td>
+				
+            </tr>
+            
+            <tr height="30">
+                <td class="comment">Пароль</td>
+                <td><input type="password" name="password" tabindex="2"></td>
+            </tr>
+			
+			<tr height="40">
+				<td colspan="3"></td>
+			</tr>
+			
+			<tr>
+				<td>
+				</td>
+				<td class="create">
+					<a href="/register.html">Зарегистрироваться</a>
+				</td>
+				<td>
+				</td>
+			</tr>
+        </table>
+        
+        <input type="submit" value="войти" style="display: none;">
+    </form>
+	
+	
+	<div class="links">
+	<a href="http://datapoliten.blogspot.com">Блог разработчиков</a><br>
+	<a href="javascript:alert('Перед вами &mdash; первый в мире удобный сервис для хранения и обмена файлами.\nЗаходите и не пожалеете!');">О сервисе</a>
+	</div>
+        
+</body>
+</html>

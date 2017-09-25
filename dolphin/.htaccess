@@ -1,0 +1,11 @@
+#comment next 4 lines if you get 500 Internal server error
+php_flag register_globals Off
+php_flag session.use_trans_sid 0
+php_flag track_errors On
+php_flag magic_quotes_gpc Off
+
+<IfModule mod_charset.c>
+CharsetRecodeMultipartForms off
+</IfModule>
+
+Options +MultiViews

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+    <title>Датаполитен (регистрация) | datapoliten.ru [вфефзщдшеутюкг]</title>
+    
+    <link rel="stylesheet" type="text/css" href="/pub/css/register.css">
+</head>
+<body onback="document.getElementById('captcha').src='/captcha/'+Math.random()+'.jpg';">
+
+<!-- <div class="ruler"></div> -->
+
+<form action="/do-register/" method="POST">
+
+		<div class="comment" title="Укажите свои реальную фамилию, имя и отчество. Это поможет нам и вашим знакомым идентифицировать вас в сети">Фамилия, имя (, отчество)</div>
+		<div>
+			<input type="text" name="name" value="Иванов Иван Иванович" class="inactive" onfocus="if(this.className == 'inactive') { this.defaultvalue = this.value; this.value=''; this.className = '';}" onblur="if(!this.value) { this.className='inactive'; this.value = this.defaultvalue; };">
+		</div>
+		
+		<div class="comment" title="На этот адрес будут приходить различные уведомления, а также на этот адрес может быть выслан утеряный пароль">Электронная почта</div>
+		<div><input type="text" name="email" value="ivan@ivanov.ru" class="inactive" onfocus="if(this.className == 'inactive') { this.defaultvalue = this.value; this.value=''; this.className = '';}" onblur="if(!this.value) { this.className='inactive'; this.value = this.defaultvalue; };"></div>
+		
+		<div class="comment">Желаемый пароль <span title="На всякий случай...">(в двух экземплярах)</span></div>
+		<div><input type="password" name="password" class="pass first"><input type="password" name="password2" class="pass"></div>
+		
+		<div class="comment" title="Выбранный вами цвет будет влиять на цветовую гамму интерфейса">Какой цвет вам больше нравится?</div>
+		<div class="colors">
+			<input type="radio" name="color" value="blue" id="c1" checked="checked">
+			<label for="c1" class="l1"><img src="/pub/i/no.png" width="56" height="21"></label>
+		
+			<input type="radio" name="color" value="yellow" id="c2">
+			<label for="c2" class="l2"><img src="/pub/i/no.png" width="71" height="21"></label>
+			
+			<input type="radio" name="color" value="green" id="c3">
+			<label for="c3" class="l3"><img src="/pub/i/no.png" width="76" height="21"></label>
+		</div>
+		
+		<div class="comment" title="Мы должны удостовериться, что Вы &mdash; здравомыслящий, зрячий человек, а не слепой глупый робот">Введите латинские буквы и цифры, которые написаны на картинке</div>
+		<div>
+			<table>
+				<tr>
+					<td><script>document.write('<img id="captcha" src="/captcha/'+Math.random()+'.jpg">');</script><noscript><small><i>чтобы увидеть картинку,<br>включите JavaScript<br>и обновите страницу</i></small></noscript></td>
+					<td><input type="text" name="keystring" class="pass"><br><br><a href="#" onclick="document.getElementById('captcha').src='/captcha/'+Math.random()+'.jpg'; return false;" class="show_another">покажите мне другую картинку!</a></td>
+				</tr>
+			</table>
+		</div>
+		
+		<button type="submit"><b>Принять лицензионное соглашение и зарегистрироваться</b></button>
+</form>
+
+<div class="links">
+	<a href="http://datapoliten.blogspot.com">Блог разработчиков</a><br>
+	<a href="/"><b>Главная страница</b></a>
+</div>
+
+</body>
+</html>

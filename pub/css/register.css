@@ -1,0 +1,142 @@
+/*
+.ruler
+{
+	display: none;
+	width: 732px;
+	border-right: black solid 1px;
+	height: 100%;
+	position: absolute;
+}
+
+
+.ruler
+{
+	height: 125px;
+	border-bottom: black solid 1px;
+	width: 100%;
+	position: absolute;
+}
+
+*/
+
+div,body,form,p,td
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+body
+{
+	background: url(/pub/i/register/bg.png) no-repeat;
+}
+
+.colors input, .colors label
+{
+	width: auto;
+}
+
+.inactive
+{
+	color: #afafaf;
+	text-decoration: underline;
+	text-line-decoration: underline;
+	text-line-style: dashed;
+}
+
+.colors label
+{
+	margin-right: 8px;
+}
+
+.colors .l1
+{
+	background: url(/pub/i/register/colors.png);
+	background-position: -22px -3px;
+}
+
+.colors .l2
+{
+	background: url(/pub/i/register/colors.png);
+	background-position: -118px -3px;
+}
+
+.colors .l3
+{
+	background: url(/pub/i/register/colors.png);
+	background-position: -232px -3px;
+}
+
+form
+{
+	position: absolute;
+	left: 270px;
+	top: 170px;
+}
+
+input, button
+{
+	width: 630px;
+	height: 25px;
+	font-size: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+
+button
+{
+	margin-top: 30px;
+	font-size: 16px;
+	height: auto;
+}
+
+input.pass
+{
+	width: 300px;
+	height: 25px;
+	font-size: 20px;
+}
+
+input.first
+{
+	margin-right: 25px;
+}
+
+.comment
+{
+	font-family: "Trebuchet MS", sans-serif;
+	font-size: 14px;
+	padding: 15px 0px 15px 0px;
+}
+
+.create a
+{
+	font-family: "Trebuchet MS", sans-serif;
+	font-size: 18px;
+	text-decoration: underline;
+	color: black;
+}
+
+.links
+{
+	position: absolute;
+	top: 80px;
+	left: 795px;
+}
+
+.links a
+{
+	line-height: 25px;
+}
+
+a
+{
+	font-family: "Trebuchet MS", sans-serif;
+	font-size: 14px;
+	text-decoration: underline;
+	color: black;
+}
+
+a.show_another
+{
+	font-size: 13px;
+}

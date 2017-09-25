@@ -1,0 +1,9 @@
+<?
+if(!$USER->is_logined())
+{
+	include('new-index.html'); //header('location: /login.html'); die();
+}else
+{
+	include('old-index.html');
+}
+?>
